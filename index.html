@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>student information form</title>
+    <link rel="stylesheet"
+href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script
+src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script
+src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+    body{
+        text-align: center;
+    }
+    input{
+        width: 100%;
+    }
+    label{
+        font-size: 20px;
+    }
+   
+</style>
+</head>
+<body>
+    <h1>Student Information Form for The School Data:</h1>
+    <br><br>
+    <div class="container">
+
+        <form method="get">
+            <div class="formg">
+                <label for="rollno">Roll No: </label> <br>
+                <input type="text" class="text2" id="rollno" onchange="exps()" required><br>
+
+            </div>
+            <div class="formg">
+                <label for="fullname">Full Name: </label> <br>
+                <input type="text" class="text2" id="fullname" required><br>
+            </div>
+            <div class="formg">
+                <label for="class">Class : </label><br>
+                <input type="text" class="text2" id="class" required><br>
+            </div>
+            <div class="formg">
+                <label for="birth">Birth Date : </label><br>
+                <input type="text" class="text2" id="birth" required><br>
+            </div>
+            <div class="formg">
+                <label for="address">Address: </label><br>
+                <input type="text" class="text2" id="address" required><br>
+            </div>
+            <div class="formg">
+                <label for="enroll">Enrollment-No: </label><br>
+                <input type="text" class="text" id="enroll" required>
+            </div>
+            <br> <br>
+           <div class="but">
+            
+            <button type="button" class="btn btn-primary btn-lg" id="save" onclick="saveto()" >Save</button>
+            <button type="button" class="btn btn-primary btn-lg" id="update" onclick="changeto()" >Change</button>
+            <button type="button" class="btn btn-primary btn-lg" id="reset" onclick="resetto()" >Reset</button>
+
+        
+           </div>
+
+
+        </form>
+    </div>
+    
+    <script  type='text/javascript' src="http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script>
+            <!-- <script type='text/javascript' src="jd.js"></script> -->
+   
+   
+   <script>
+        //reset form info
+function resetto() {
+    $("#rollno").val("");
+    $("#fullname").val("");
+    $("#class").val("");
+    $("#birth").val("");
+    $("#address").val("");
+    $("#enroll").val("");
+    $("#rollno").prop("disabled", false);
+    $("#save").prop("disabled", true);
+
+    $("#update").prop("disabled", true);
+    $("#reset").prop("disabled", true);
+
+
+    $("#rollno").focus();
+
+}
+//open
+function saveRecNo2LS(jsonObj) { var lvData = JSON.parse(jsonObj.data);
+     localStorage.setItem("recno ", IvData.rec_nop); 
+    }
+function fillData(jsonObj) {
+
+saveRecNo2LS(jsonObj);
+
+var data = JSON.parse(jsonObjdata).record;
+
+$("#fullname").val(data.fullname);
+
+$("#class").val(data.class);
+
+$('#birth').val(data.birth);
+
+$("#address").val(data.address);
+
+$('#enroll').val(data.enroll);
+
+}
+//jaldi
+function exps(){
+    var studendata = getEmpIdasJsonObj();
+
+var getRequest = createGETBYKEYRequest("90931711|-31949325864941821|90961162",
+        jsonStr, "college", "college-REL", studendata);
+
+jQuery.ajaxSetup({async: false});
+
+var resJsonObj = executeCommandAtGivenBaseUrl(getRequest,"http://api.login2explore.com:5577", "/api/iml");
+
+jQuery.ajaxSetup ({async: true}); 
+if (resJsonObj.status === 400) {
+
+$("#save").prop("disabled", false);
+$("#reset").prop("disabled", false);
+
+$("#fullname").focus();
+
+} else if (resJsonObj.status === 200) {
+
+$("#rollno").prop("disabled", true); 
+fillData(resJsonObj);
+
+$("#change").prop("disabled", false);
+
+$("#reset").prop("disabled", false);
+
+$("#fullname").focus();
+
+}
+}
+function getEmpIdAsJsonObj() { var empid=$("#rollno").val("");
+
+var jsonstr ={
+
+id: rollno
+
+};
+ return JSON.stringify(jsonStr);
+
+}
+//validate
+function validateAndGetFormData() {
+    var empIdVar = $("#rollno").val();
+    if (empIdVar === "") {
+        alert("RollNO  Required Value");
+        $("#rollno").focus();
+        return "";
+    }
+    var empNameVar = $("#fullname").val();
+    if (empNameVar === "") {
+        alert("Full Name is Required Value");
+        $("#fullname").focus();
+        return "";
+    }
+    var empclassVar = $("#class").val();
+    if (empclassVar === "") {
+        alert("Class  is Required Value");
+        $("#class").focus();
+        return "";
+    }
+    var empbirthVar = $("#birth").val();
+    if (empbirthVar === "") {
+        alert("Employee Email is Required Value");
+        $("#birth").focus();
+        return "";
+    }
+    var empaddressVar = $("#address").val();
+    if (empaddressVar === "") {
+        alert("Employee Email is Required Value");
+        $("#address").focus();
+        return "";
+    }
+    var empenrollVar = $("#enroll").val();
+    if (empenrollVar === "") {
+        alert("Employee Email is Required Value");
+        $("#enroll").focus();
+        return "";
+    }
+    var jsonStrObj = {
+        empId: empIdVar,
+        empName: empNameVar,
+        empClass: empclassVar,
+        empBirth: empbirthVar,
+        address: empaddressVar,
+        Enroll: empenrollVar
+    };
+
+    return JSON.stringify(jsonStrObj);
+}
+
+//save to work
+function saveto() {
+    var jsonStr = validateAndGetFormData();
+    if (jsonStr === "") {
+        return;
+    }
+    var putReqStr = createPUTRequest("90931711|-31949325864941821|90961162",
+        jsonStr, "college", "college-REL");
+
+    jQuery.ajaxSetup({ async: false });
+    var resultObj = executeCommand(putReqStr,
+        "http://api.login2explore.com:5577", "/api/iml");
+    alert(JSON.stringify(resultObj));
+    jQuery.ajaxSetup({ async: true });
+    resetForm();
+    $("#rollno").focus();
+}
+
+//change to
+function changeto() {
+    $("#update").prop("disabled", true);
+    var chan=validateAndGetFormData();
+    var putReqStr = createUPDATERecordRequest("90931711|-31949325864941821|90961162",
+        chan, "college", "college-REL", localStorage.setItem("recno ", IvData.rec_nop));
+
+    jQuery.ajaxSetup({ async: false });
+    var resultsObj = executeCommand(putReqStr,
+        "http://api.login2explore.com:5577", "/api/iml");
+    alert(JSON.stringify(resultsObj));
+    jQuery.ajaxSetup({ async: true });
+    resetForm();
+    $("#rollno").focus();
+}
+     </script>
+</body>
+</html>
